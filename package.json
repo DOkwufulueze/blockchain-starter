@@ -1,0 +1,13 @@
+{
+  "name": "blockchain-starter",
+  "version": "1.0.0",
+  "description": "Quickly create a private blockchain with addresses.",
+  "main": "index.js",
+  "repository": "git@github.com:DOkwufulueze/blockchain-starter.git",
+  "author": "Daniel Okwufulueze <danielokwufulueze@gmail.com>",
+  "license": "GPL-3.0",
+  "private": false,
+  "scripts": {
+    "init": "./sh/init"
+  }
+}
