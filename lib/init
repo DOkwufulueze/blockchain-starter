@@ -1,1 +1,110 @@
 #!/bin/sh
+
+# Check for geth
+test -x "$(command -v geth)" || {
+  echo "Command not found: geth - install geth.";
+  exit 1;
+}
+
+# Enter script directory
+cd "$(dirname "$0")" || exit;
+
+# Enter root directory
+cd .. || exit;
+
+# Set Genesis config file and related parameters
+genesisConfig=builds/genesis.json;
+genesisString=;
+accountsDir=builds/accounts;
+dbDir=builds/db;
+
+# Addresses array
+addresses="";
+maxAddressCount=10;
+
+# Clear previous blockchain build artefacts
+echo ":::Removing previous blockchain build artefacts...";
+rm -rf builds && echo ":::Successfully removed previous blockchain build artefacts." || {
+  echo ":::Unable to remove previous blockchain build artefacts.";
+  exit 1;
+}
+
+# Set up blockchain build artefacts
+echo ":::Setting up new blockchain build artefacts...";
+mkdir -p "$accountsDir";
+mkdir -p "$dbDir";
+
+echo ":::Creating $maxAddressCount test addresses...";
+
+i=0;
+while [ "$i" -lt "$maxAddressCount" ]
+do
+  accountDir="$accountsDir/account-$((i + 1))";
+  mkdir -p "$accountDir";
+  touch "$accountDir/address" "$accountDir/password";
+  echo "password" > "$accountDir/password";
+
+  geth --datadir "$dbDir" --password "$accountDir/password" account new > "$accountDir/address";
+
+  # Strip address from address file
+  address=$(cat "$accountDir/address" | grep -Eo "0x[0-9a-fA-F]+");
+
+  echo ":::Successfully created address $address";
+  addresses="${addresses}$address ";
+
+  i=$((i + 1));
+done
+
+echo ":::Successfully set up new blockchain build artefacts.";
+
+echo ":::Generating the Genesis block file...";
+coinbase=$(echo "$addresses" | cut -d ' ' -f1);
+balance="6666666";
+alloc="\"alloc\": {\n";
+j=1;
+for address in $addresses
+do
+  alloc="$alloc\t\t\"$address\": {\n";
+  alloc="$alloc\t\t\t\"balance\": \"$balance\"\n"
+  alloc="$alloc\t\t}";
+  if [ $j != "$maxAddressCount" ]
+  then
+    alloc="$alloc,\n";
+  else
+    alloc="$alloc\n\t}"
+  fi
+  j=$((j + 1));
+done
+
+genesisString=$(
+cat <<AMY
+{
+  $alloc,
+  "config": {
+    "chainId": 666,
+    "homesteadBlock": 0,
+    "eip150Block": 0,
+    "eip155Block": 0,
+    "eip158Block": 0,
+    "byzantiumBlock": 0
+  },
+  "coinbase": "$coinbase",
+  "difficulty": "0x200",
+  "extraData": "0x00",
+  "gasLimit":"0x5a5a5a",
+  "nonce":"0x0000000000000042",
+  "mixhash":
+  "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "parentHash":
+  "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "timestamp":"0x00"
+}
+AMY
+);
+
+echo "$genesisString" > "$genesisConfig";
+echo ":::Successfully generated the genesis block file.";
+
+printf ':::Creating the Genesis Block...\n';
+geth --datadir "$dbDir" init "$genesisConfig";
+echo ":::Successfully created the Genesis Block";
