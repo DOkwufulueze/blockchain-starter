@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Check for geth
+test -x "$(command -v geth)" || {
+  echo "Command not found: geth - install geth.";
+  exit 1;
+}
+
+# Enter script directory
+cd "$(dirname "$0")" || exit;
+
+# Enter root directory
+cd .. || exit;
+
+genesisConfig=builds/genesis.json;
+
+# Set Blockchain parameters
+targetGasLimit="666666666666";
+dbDir=builds/db;
+etherbase=$(cat "$genesisConfig" | grep -Eo "\"coinbase\": \"0x[0-9a-fA-F]+\"" | cut -d " " -f2 | cut -d "\"" -f2);
+
+# Start the blockchain network
+geth --datadir "$dbDir" --networkid "666" --rpc --targetgaslimit "$targetGasLimit" --rpccorsdomain "localhost:8545" --mine --miner.etherbase "$etherbase" --allow-insecure-unlock;
