@@ -8,6 +8,7 @@
   "license": "GPL-3.0",
   "private": false,
   "scripts": {
-    "init": "./sh/init"
+    "genesis": "./lib/genesis",
+    "start": "./lib/start-network"
   }
 }
