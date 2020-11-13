@@ -20,4 +20,4 @@ dbDir=builds/db;
 etherbase=$(cat "$genesisConfig" | grep -Eo "\"coinbase\": \"0x[0-9a-fA-F]+\"" | cut -d " " -f2 | cut -d "\"" -f2);
 
 # Start the blockchain network
-geth --datadir "$dbDir" --networkid "666" --rpc --targetgaslimit "$targetGasLimit" --rpccorsdomain "localhost:8545" --mine --miner.etherbase "$etherbase" --allow-insecure-unlock;
+geth --datadir "$dbDir" --networkid "666" --http --miner.gastarget "$targetGasLimit" --http.corsdomain "localhost:8545" --mine --miner.etherbase "$etherbase" --allow-insecure-unlock;

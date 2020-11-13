@@ -83,10 +83,15 @@ cat <<AMY
   "config": {
     "chainId": 666,
     "homesteadBlock": 0,
+    "DAOForkBlock": 0,
+    "DAOForkSupport": false,
     "eip150Block": 0,
     "eip155Block": 0,
     "eip158Block": 0,
-    "byzantiumBlock": 0
+    "byzantiumBlock": 0,
+    "constantinopleBlock": 0,
+    "petersburgBlock": 0,
+    "istanbulBlock": 0
   },
   "coinbase": "$coinbase",
   "difficulty": "0x200",
