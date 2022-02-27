@@ -47,10 +47,13 @@ do
   geth --datadir "$dbDir" --password "$accountDir/password" account new > "$accountDir/address";
 
   # Strip address from address file
-  address=$(cat "$accountDir/address" | grep -Eo "0x[0-9a-fA-F]+");
+  accountAddress=$(cat "$accountDir/address" | grep -Eo "0x[0-9a-fA-F]+");
 
-  echo ":::Successfully created address $address";
-  addresses="${addresses}$address ";
+  # Rename account directory to account address
+  mv $accountDir $accountsDir/$accountAddress;
+
+  echo ":::Successfully created address $accountAddress";
+  addresses="${addresses}$accountAddress ";
 
   i=$((i + 1));
 done
