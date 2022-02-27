@@ -1,0 +1,101 @@
+#!/bin/bash
+
+# Check for geth
+test -x "$(command -v geth)" || {
+  echo "Command not found: geth - install geth.";
+  exit 1;
+}
+
+# Enter script directory
+cd "$(dirname "${0}")" || exit;
+
+# Enter the blockchain-starter directory
+cd .. || exit;
+
+# source utilities file
+source ./utils/string;
+
+buildsDir="./builds";
+dbDir="${buildsDir}/db";
+accountsDir="${buildsDir}/accounts";
+passwordsFile=/tmp/blockchain-starter-passwords-file;
+
+[[ -f ${passwordsFile} ]] && rm ${passwordsFile};
+
+validateAccountAddresses () {
+  accountAddresses=${1};
+  for accountAddress in ${accountAddresses[@]}
+  do
+    if [[ ! $(find "${buildsDir}" -name "${accountAddress}") ]]
+    then
+      echo "${accountAddress} directory does not exist. Please run 'yarn genesis' first." && exit 1;
+    fi
+  done
+}
+
+populatePasswordsFile () {
+  touch ${passwordsFile};
+  accountAddresses=${1};
+  for accountAddress in ${accountAddresses[@]}
+  do
+    passwordFile="${accountsDir}/${accountAddress}/password";
+
+    # Write ${accountAddress}'s password into ${passwordsFile}
+    cat ${passwordFile} >> ${passwordsFile};
+  done
+
+  echo "Passwords file successfully generated in ${passwordsFile}";
+}
+
+unlockAccounts () {
+  accountAddresses=($(replaceCharInString ${1} "," " "));
+  validateAccountAddresses ${accountAddresses};
+  populatePasswordsFile ${accountAddresses};
+  
+  if [[ -e "${dbDir}" ]]
+  then
+    # Unlock accounts (${accountAddresses}) using password
+    # file (${passwordFile}) on the network with id 666
+    echo "Unlocking accounts: ${1}"
+    geth --datadir "$dbDir" --networkid "666" --http --http.corsdomain "localhost:8545" --unlock "${1}" --password "${passwordsFile}" --allow-insecure-unlock;
+  else
+    echo "Blockchain db does not exist. Please run 'yarn genesis' first"
+    exit 1;
+  fi
+
+  echo "Successfully unlocked accounts: ${1}.";
+}
+
+unlockAllAccounts () {
+  accountAddresses="";
+  for ACCOUNT_DIR in ${accountsDir}/*
+  do
+    accountAddress=$(echo "${ACCOUNT_DIR}" | cut -d "/" -f 4);
+    accountAddresses+="${accountAddress},"
+  done
+
+  # Strip off the last comma
+  accountAddresses=$(replaceLastCharInString ${accountAddresses} "," "");
+
+  echo "Unlocking Accounts with addresses: ${accountAddresses}";
+  unlockAccounts $accountAddresses;
+}
+
+if [[ $# -gt 0 ]]
+then
+  while [[ ${1} != "" ]]
+  do
+    case ${1} in
+      --all | -a )
+        # unlock all generated accounts
+        unlockAllAccounts;
+      ;;
+      * )
+        # unlock comma-separated accounts
+        unlockAccounts ${1};
+      ;;
+    esac
+
+    shift;
+  done
+fi

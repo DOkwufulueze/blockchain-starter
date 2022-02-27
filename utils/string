@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Replace a character ${2} with another ${3} in string ${1}
+replaceCharInString () {
+    echo $(sed -e s/"${2}"/"${3}"/g <<< "${1}");
+}
+
+# Replace last character ${2} with another ${3} in string ${1}
+replaceLastCharInString () {
+    echo $(sed -e s/"${2}$"/"${3}"/ <<< "${1}");
+}
