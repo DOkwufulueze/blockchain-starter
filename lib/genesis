@@ -99,7 +99,7 @@ cat <<AMY
   "coinbase": "$coinbase",
   "difficulty": "0x200",
   "extraData": "0x00",
-  "gasLimit":"0x5a35a35a3",
+  "gasLimit":"0x535353",
   "nonce":"0x0000000000000042",
   "mixhash":
   "0x0000000000000000000000000000000000000000000000000000000000000000",
