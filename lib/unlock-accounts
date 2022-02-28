@@ -49,6 +49,7 @@ populatePasswordsFile () {
 
 unlockAccounts () {
   accountAddresses=($(replaceCharInString ${1} "," " "));
+  startFlag=${2};
   validateAccountAddresses ${accountAddresses};
   populatePasswordsFile ${accountAddresses};
   
@@ -56,8 +57,19 @@ unlockAccounts () {
   then
     # Unlock accounts (${accountAddresses}) using password
     # file (${passwordFile}) on the network with id 666
-    echo "Unlocking accounts: ${1}"
-    geth --datadir "$dbDir" --networkid "666" --http --http.corsdomain "localhost:8545" --unlock "${1}" --password "${passwordsFile}" --allow-insecure-unlock;
+
+    if [[ ${startFlag} -eq 1 ]]
+    then
+      genesisConfig=builds/genesis.json;
+      targetGasLimit="666666666666";
+      etherbase=$(cat "${genesisConfig}" | grep -Eo "\"coinbase\": \"0x[0-9a-fA-F]+\"" | cut -d " " -f2 | cut -d "\"" -f2);
+
+      echo "Unlocking accounts: ${1} and starting the network ..."
+      geth --datadir "$dbDir" --networkid "666" --http --http.corsdomain "localhost:8545" --unlock "${1}" --password "${passwordsFile}" --allow-insecure-unlock --miner.gastarget "${targetGasLimit}" --mine --miner.etherbase "${etherbase}";
+    else
+      echo "Unlocking accounts: ${1}"
+      geth --datadir "$dbDir" --networkid "666" --http --http.corsdomain "localhost:8545" --unlock "${1}" --password "${passwordsFile}" --allow-insecure-unlock;
+    fi
   else
     echo "Blockchain db does not exist. Please run 'yarn genesis' first"
     exit 1;
@@ -67,6 +79,7 @@ unlockAccounts () {
 }
 
 unlockAllAccounts () {
+  startFlag=${1};
   accountAddresses="";
   for ACCOUNT_DIR in ${accountsDir}/*
   do
@@ -78,7 +91,13 @@ unlockAllAccounts () {
   accountAddresses=$(replaceLastCharInString ${accountAddresses} "," "");
 
   echo "Unlocking Accounts with addresses: ${accountAddresses}";
-  unlockAccounts $accountAddresses;
+
+  if [[ ${startFlag} -eq 1 ]]
+  then
+    unlockAccounts $accountAddresses 1;
+  else
+    unlockAccounts $accountAddresses
+  fi
 }
 
 if [[ $# -gt 0 ]]
@@ -87,12 +106,28 @@ then
   do
     case ${1} in
       --all | -a )
-        # unlock all generated accounts
+        # Unlock all generated accounts
         unlockAllAccounts;
       ;;
-      * )
-        # unlock comma-separated accounts
+      --comma-separated | -c )
+        # Unlock comma-separated accounts
+        shift;
         unlockAccounts ${1};
+      ;;
+      --all-start | -A )
+        # Unlock all generated accounts and start.
+        # The flag 1 implies starting the network.
+        unlockAllAccounts 1;
+      ;;
+      --comma-separated-start | -C )
+        # Unlock accounts and start.
+        # The flag 1 implies starting the network.
+        shift;
+        unlockAccounts ${1} 1;
+      ;;
+      * )
+        # Invalid option
+        echo ":::Invalid option: ${1}";
       ;;
     esac
 
