@@ -24,19 +24,47 @@ After running the `yarn genesis` command above, a `builds/` directory would be c
 - `db/` containing chain data, key store, etc
 - the `genesis.json` file specifying the genesis block
 
-## 2. Start The Network
+## 2. Start The Network - Mining Enabled
 
-To start the network which has been initialised in [step 1](#1-set-up-the-blockchain), just run the [start-network](https://github.com/DOkwufulueze/blockchain-starter/blob/master/lib/start-network) script. You could do this using `yarn` too:
+There are options to start the network with mining enabled as described below.
+
+### Start Network Without Unlocking Any Account
+
+To start the network which has been initialised in [step 1](#1-set-up-the-blockchain) without unlocking any account, just run the [start-network](https://github.com/DOkwufulueze/blockchain-starter/blob/master/lib/start-network) script. You could do this using `yarn` too:
 
 ```shell
 yarn start
+```
+
+### Start The Network With Accounts Unlocked
+
+To start the network with two accounts unlocked, 0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73,0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73 for example, run the following with the accounts in a comma-separated string:
+
+```shell
+yarn unlock-accounts-start 0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73,0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73
+```
+
+### Start The Network With All Accounts Unlocked
+
+To start the network with all accounts generated in [step 1](#1-set-up-the-blockchain) unlocked, run the following:
+
+```shell
+yarn unlock-all-start
+```
+
+### Start The Network With Your Coinbase Unlocked
+
+To start the network with just your coinbase unlocked, run the following:
+
+```shell
+yarn unlock-coinbase-start
 ```
 
 <br>
 
 > NOTE: the accounts generated in [step 1](#1-set-up-the-blockchain) can be imported into [MetaMask](https://metamask.io/) if you choose to.
 
-# Unlocking Accounts
+# Unlocking Accounts Without Mining
 
 `blockchain-starter` provides ways to unlock any number of available accounts for use with DApps like [eth-vue](https://github.com/DOkwufulueze/eth-vue). The subsections below show how to unlock accounts for the two cases (*selected accounts* and *all accounts*):
 
@@ -48,7 +76,7 @@ To unlock accounts like `0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73` and `0x2Abe
 yarn unlock-accounts 0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73,0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73
 ```
 
-> Note: The accounts passed to `yarn unlock-accounts` must have been generated in [step 1](#1-set-up-the-blockchain) for things to go smoothly.
+> Note: The accounts passed to `yarn` for unlocking must have been generated in [step 1](#1-set-up-the-blockchain) for things to go smoothly.
 
 <br>
 
