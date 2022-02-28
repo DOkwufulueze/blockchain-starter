@@ -9,8 +9,11 @@
   "private": false,
   "scripts": {
     "genesis": "./lib/genesis",
-    "start": "./lib/start-network",
-    "unlock-accounts": "./lib/unlock-accounts",
-    "unlock-all-accounts": "./lib/unlock-accounts --all"
+    "start": "./lib/start-network --no-unlock",
+    "unlock-accounts-start": "./lib/start-network --unlock-accounts",
+    "unlock-accounts": "./lib/unlock-accounts --comma-separated",
+    "unlock-all-accounts": "./lib/unlock-accounts --all",
+    "unlock-all-start": "./lib/start-network --unlock-all",
+    "unlock-coinbase-start": "./lib/start-network --unlock-coinbase"
   }
 }
