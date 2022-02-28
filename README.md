@@ -32,19 +32,33 @@ To start the network which has been initialised in [step 1](#1-set-up-the-blockc
 yarn start
 ```
 
-# Unlocking An Account
+<br>
 
-To unlock an account for use with DApps like [eth-vue](https://github.com/DOkwufulueze/eth-vue), for example, run:
+> NOTE: the accounts generated in [step 1](#1-set-up-the-blockchain) can be imported into [MetaMask](https://metamask.io/) if you choose to.
+
+# Unlocking Accounts
+
+`blockchain-starter` provides ways to unlock any number of available accounts for use with DApps like [eth-vue](https://github.com/DOkwufulueze/eth-vue). The subsections below show how to unlock accounts for the two cases (*selected accounts* and *all accounts*):
+
+## Unlocking Selected Accounts
+
+To unlock accounts like `0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73` and `0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73`, for example, simply run the following command with the accounts as a comma-separated string:
 
 ```shell
-# To unlock an address 0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73,
-# for example, run the following and supply the password: password
-geth --datadir "builds/db" --unlock 0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73
+yarn unlock-accounts 0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73,0x2Abe38bB3Cb626bE1e69Cc3776c4c3EA2B1DCa73
 ```
+
+> Note: The accounts passed to `yarn unlock-accounts` must have been generated in [step 1](#1-set-up-the-blockchain) for things to go smoothly.
 
 <br>
 
-> NOTE: the generated accounts can be imported into [MetaMask](https://metamask.io/) if you choose to.
+## Unlocking All Accounts
+
+To unlock all the accounts generated in [step 1](#1-set-up-the-blockchain), run the following:
+
+```shell
+yarn unlock-all-accounts
+```
 
 <br>
 
