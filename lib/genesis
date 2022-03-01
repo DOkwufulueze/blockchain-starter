@@ -62,7 +62,7 @@ echo ":::Successfully set up new blockchain build artefacts.";
 
 echo ":::Generating the Genesis block file...";
 coinbase=$(echo "$addresses" | cut -d ' ' -f1);
-balance="0x5A35A35A3";
+balance="0x5A35A35A35A35A35A3";
 alloc="\"alloc\": {\n";
 j=1;
 for address in $addresses
