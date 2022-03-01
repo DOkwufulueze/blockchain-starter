@@ -65,7 +65,7 @@ unlockAccounts () {
       etherbase=$(cat "${genesisConfig}" | grep -Eo "\"coinbase\": \"0x[0-9a-fA-F]+\"" | cut -d " " -f2 | cut -d "\"" -f2);
 
       echo "Unlocking accounts: ${1} and starting the network ..."
-      geth --datadir "$dbDir" --networkid "666" --http --http.corsdomain "localhost:8545" --unlock "${1}" --password "${passwordsFile}" --allow-insecure-unlock --miner.gastarget "${targetGasLimit}" --mine --miner.etherbase "${etherbase}";
+      geth --datadir "$dbDir" --networkid "666" --http --http.corsdomain "localhost:8545" --unlock "${1}" --password "${passwordsFile}" --allow-insecure-unlock --miner.gastarget "${targetGasLimit}" --mine --miner.etherbase "${etherbase}" --miner.threads 1;
     else
       echo "Unlocking accounts: ${1}"
       geth --datadir "$dbDir" --networkid "666" --http --http.corsdomain "localhost:8545" --unlock "${1}" --password "${passwordsFile}" --allow-insecure-unlock;

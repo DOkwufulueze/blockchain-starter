@@ -23,7 +23,7 @@ etherbase=$(cat "$genesisConfig" | grep -Eo "\"coinbase\": \"0x[0-9a-fA-F]+\"" |
 
 startBlockchainNetworkNoUnlock () {
   # Start the blockchain network
-  geth --datadir "$dbDir" --networkid "666" --http --miner.gastarget "$targetGasLimit" --http.corsdomain "localhost:8545" --mine --miner.etherbase "$etherbase" --allow-insecure-unlock;
+  geth --datadir "$dbDir" --networkid "666" --http --miner.gastarget "$targetGasLimit" --http.corsdomain "localhost:8545" --mine --miner.etherbase "$etherbase" --miner.threads 1 --allow-insecure-unlock;
 }
 
 if [[ $# -gt 0 ]]
