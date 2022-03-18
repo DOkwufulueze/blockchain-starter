@@ -1,5 +1,11 @@
 # Blockchain Starter
 
+![shubham-dhage-IlUq1ruyv0Q-unsplash](https://user-images.githubusercontent.com/13135088/158922104-f3467e3c-8e84-4b8e-892f-0ff4bee398a5.jpg)
+
+Photo by <a href="https://unsplash.com/@theshubhamdhage?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Shubham Dhage</a> on <a href="https://unsplash.com/s/photos/ethereum?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+
+## About
+
 The `blockchain-starter` allows you to quickly create a private blockchain with 10 addresses and run a local network.
 
 ## How To
